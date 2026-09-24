@@ -25,6 +25,13 @@ app.post("/webhook", middleware(config), async (req, res) => {
   console.log("送信者ID:", userId);
   console.log("メッセージ:", text);
 }
+    if (text === "読み上げON") {
+  console.log("読み上げON");
+}
+
+if (text === "読み上げOFF") {
+  console.log("読み上げOFF");
+}
 
     res.sendStatus(200);
   } catch (error) {
