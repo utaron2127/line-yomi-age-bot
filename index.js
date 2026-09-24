@@ -2,7 +2,9 @@ const express = require("express");
 const { middleware, Client } = require("@line/bot-sdk");
 
 const app = express();
+
 let readingEnabled = false;
+const MY_USER_ID = process.env.MY_LINE_USER_ID;
 
 const config = {
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -16,27 +18,33 @@ app.post("/webhook", middleware(config), async (req, res) => {
     const events = req.body.events;
 
     for (const event of events) {
-  if (event.type !== "message") continue;
+      if (event.type !== "message") continue;
 
-  if (event.message.type !== "text") continue;
+      if (event.message.type !== "text") continue;
 
-  const userId = event.source.userId;
-  const text = event.message.text;
+      const userId = event.source.userId;
+      const text = event.message.text;
 
-  console.log("送信者ID:", userId);
-  console.log("メッセージ:", text);
+      console.log("送信者ID:", userId);
+      console.log("メッセージ:", text);
 
-  if (text === "読み上げON") 
-  readingEnabled = true;
-  console.log("読み上げON");
-}
+      if (text === "読み上げON") {
+        readingEnabled = true;
+        console.log("読み上げON");
+      }
 
-if (text === "読み上げOFF") {
-  readingEnabled = false;
-  console.log("読み上げOFF");
-}
-  }
+      if (text === "読み上げOFF") {
+        readingEnabled = false;
+        console.log("読み上げOFF");
+      }
+
+      if (readingEnabled && userId === MY_USER_ID) {
+        console.log("自分のメッセージを読み上げます:", text);
+      }
+    }
+
     res.sendStatus(200);
+
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -51,4 +59,5 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`サーバー起動: ${PORT}`);
+});PORT}`);
 });
