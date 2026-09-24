@@ -2,6 +2,7 @@ const express = require("express");
 const { middleware, Client } = require("@line/bot-sdk");
 
 const app = express();
+let readingEnabled = false;
 
 const config = {
   channelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
@@ -24,15 +25,17 @@ app.post("/webhook", middleware(config), async (req, res) => {
 
   console.log("送信者ID:", userId);
   console.log("メッセージ:", text);
-}
-    if (text === "読み上げON") {
+
+  if (text === "読み上げON") 
+  readingEnabled = true;
   console.log("読み上げON");
 }
 
 if (text === "読み上げOFF") {
+  readingEnabled = false;
   console.log("読み上げOFF");
 }
-
+  }
     res.sendStatus(200);
   } catch (error) {
     console.error(error);
