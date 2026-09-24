@@ -15,8 +15,16 @@ app.post("/webhook", middleware(config), async (req, res) => {
     const events = req.body.events;
 
     for (const event of events) {
-      console.log("LINEから受信:", event);
-    }
+  if (event.type !== "message") continue;
+
+  if (event.message.type !== "text") continue;
+
+  const userId = event.source.userId;
+  const text = event.message.text;
+
+  console.log("送信者ID:", userId);
+  console.log("メッセージ:", text);
+}
 
     res.sendStatus(200);
   } catch (error) {
